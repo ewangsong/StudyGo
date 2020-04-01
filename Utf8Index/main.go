@@ -10,20 +10,6 @@ var (
 	s string = "hello北京天安门最美丽"
 )
 
-// func main() {
-// 	index := strings.Index(s, "h")
-// 	fmt.Println(index)
-// }
-
-// func Index(s, sub string) int {
-// 	index := strings.Index(s, sub)
-
-// 	if index == -1 || index == 0 {
-// 		return index
-// 	}
-
-// }
-
 func main() {
 	fmt.Println(Utf8Index("12ws北京天安门最美丽", "天安门"))
 }
