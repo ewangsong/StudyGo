@@ -7,13 +7,14 @@ import (
 )
 
 var (
-	s string = "hello北京天安门最美丽"
+	s = "hello北京天安门最美丽"
 )
 
 func main() {
 	fmt.Println(Utf8Index("12ws北京天安门最美丽", "天安门"))
 }
 
+//Utf8Index 处理函数
 func Utf8Index(str, substr string) int {
 	asciiPos := strings.Index(str, substr)
 	fmt.Println(asciiPos)
