@@ -1,4 +1,4 @@
-package main
+package binaryconversion
 
 //此程序为输入一个二进制数转换成其他进制数的转换程序
 import (
@@ -39,7 +39,7 @@ func checkNumber(s string) (number int, isOk bool) {
 		if j == 0 {
 			continue
 		} else if j == 1 {
-			number += int(math.Pow(k, float64(dateLen-i)))
+			number += int(math.Pow(k, float64(dateLen-i-1)))
 		} else if j != 0 && j != 1 {
 			return 0, false
 		}
