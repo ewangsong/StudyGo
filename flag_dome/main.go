@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 )
@@ -18,11 +19,11 @@ import (
 // }
 
 var (
-	admin    bool
-	radiusct bool
-	stop     bool
-	version  bool
-	c        string
+	start   bool
+	stop    bool
+	version bool
+	c       string
+	d       bool
 )
 
 func usage() {
@@ -44,29 +45,41 @@ func main() {
 	// fmt.Println(value)
 	// fmt.Println(ss)
 
-	flag.BoolVar(&admin, "admin", false, "启动后台管理")
-	flag.BoolVar(&radiusct, "radiusct", false, "启动服务")
+	flag.BoolVar(&start, "start", false, "启动")
 	flag.BoolVar(&stop, "stop", false, "关闭程序")
 	flag.BoolVar(&version, "version", false, "查看版本")
 	flag.StringVar(&c, "c", "", "配置文件路径")
+	flag.BoolVar(&d, "d", false, "是否后台启动")
 	flag.Usage = usage
 
 	flag.Parse()
 
-	//fmt.Println(admin, radiusct, stop, version)
+	command := exec.Command("../study")
 
-	if admin {
-		fmt.Println("启动后台程序")
-	}
-	if radiusct {
-		fmt.Println("启动服务")
+	if start {
+		err := command.Start()
+		fmt.Printf("gonne start, [PID] %d running...\n", command.Process.Pid)
+		ioutil.WriteFile("./gonne.lock", []byte(fmt.Sprintf("%d", command.Process.Pid)), 0666)
+		if err != nil {
+			fmt.Println("启动程序失败", err)
+			return
+		}
 	}
 
 	if stop {
 		fmt.Println("关闭程序")
+		stopp()
 	}
 	if version {
 		fmt.Println("当前版本是0.1")
+	}
+
+	if d {
+		fmt.Println("后台启动")
+
+	} else {
+		command.Wait()
+
 	}
 	// if c == "" {
 	// 	os.Exit(2)
@@ -76,18 +89,19 @@ func main() {
 
 	// a := os.Args
 	// fmt.Println(a[0])
+	//	stoppro()
+}
 
-	command := exec.Command("/bin/ls")
+func stopp() {
+	b, err := ioutil.ReadFile("./gonne.lock")
 
-	err := command.Run()
-	pid := command.Process.Pid
-	fmt.Println(err)
-	fmt.Println(pid)
+	if err != nil {
+		fmt.Println("获取程序PID错误", err)
+		return
+	}
 
-	// if err := command.Start(); err != nil {
-	// 	fmt.Println("command failed", err)
-	// }
-	// err := command.Wait()
-	// fmt.Println(err)
+	stopcommand := exec.Command("/bin/kill", string(b))
+
+	stopcommand.Start()
 
 }
